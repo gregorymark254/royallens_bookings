@@ -28,6 +28,7 @@ export default function Page() {
   const [videographers, setVideographers] = useState(video);
   const [total_amount, setTotal_amount] = useState('');
   const [special_request, setSpecial_request] = useState('');
+  const [amount, setAmount] = useState(total_amount);
 
   const increment = () => setPhoto(prev => prev + 1);
   const decrement = () => {
@@ -77,7 +78,7 @@ export default function Page() {
       if (!error?.response) {
         setError('Network Error! Check your connection');
       } else {
-        setError(error.response.data.detail);
+        setError(error?.response?.data?.detail || "Something went wrong");
       }
     } finally {
       setLoading(false);
@@ -94,11 +95,30 @@ export default function Page() {
         location, photographers:photo, videographers:video, total_amount, special_request
       });
       toast.success('Booking successful')
+      setStep(3);
     } catch (error) {
       if (!error?.response) {
         toast.error('Network Error! Check your connection');
       } else {
-        toast.error(error.response.data.detail);
+        toast.error(error?.response?.data?.detail || "Something went wrong");
+      }
+    }
+  }
+
+  // send stk push request
+  const makePayment = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post('http://127.0.0.1:8000/payments/mpesa', {
+        phone, amount, email
+      })
+      toast.success(`Stk push sent to ${phone}`)
+      setStep(3)
+    } catch (error) {
+      if (!error?.response) {
+        toast.error('Network Error! Check your connection');
+      } else {
+        toast.error(error?.response?.data?.detail || "Something went wrong");
       }
     }
   }
@@ -306,6 +326,54 @@ export default function Page() {
               <p className="text-2xl font-bold text-green-700">KSH {total_amount?.toLocaleString()}</p>
             </div>
             <button className='mt-2 py-2 px-4 w-full bg-gray-800 text-white cursor-pointer hover:bg-gray-700 rounded-md'>Complete Booking</button>
+          </form>
+        </div>
+      )}
+
+      {step === 3 && (
+        <div className="my-4 bg-slate-100 p-4 rounded-lg">
+          <div className='text-center'>
+            <h2 className="text-lg font-bold text-green-700">Complete Your Booking</h2>
+            <p>Make payment now...</p>
+          </div>
+
+          {/* step 3 form */}
+          <form className="mt-4" onSubmit={makePayment}>
+            <p>Enter your phone number to get a mpesa payment prompt.</p>
+            <div className='my-2 p-2 w-full lg:w-1/2'>
+              <label htmlFor='name'>Email <span className='text-red-600'>*</span>
+                <input 
+                  type='email'
+                  required
+                  className='mt-1 block w-full py-2 px-3 border rounded-md'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className='my-2 p-2 w-full lg:w-1/2'>
+              <label htmlFor='name'>Phone number <span className='text-red-600'>*</span>
+                <input 
+                  type='number'
+                  required
+                  className='mt-1 block w-full py-2 px-3 border rounded-md'
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className='my-2 p-2 w-full lg:w-1/2'>
+              <label htmlFor='name'>Amount
+                <input 
+                  type='number'
+                  required
+                  className='mt-1 block w-full py-2 px-3 border rounded-md'
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                />
+              </label>
+            </div>
+            <button className='mt-2 py-2 px-4 bg-gray-800 text-white cursor-pointer hover:bg-gray-700 rounded-md'>Make payment</button>
           </form>
         </div>
       )}
