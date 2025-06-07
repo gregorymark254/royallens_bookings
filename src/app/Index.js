@@ -17,7 +17,7 @@ export default function Page() {
   useEffect(() => {
     const getPackages = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/packages/')
+        const response = await axios.get('https://test.roadrimz.com/packages/')
         setPackages(response.data.items)
         setCount(response.data.count)
         setTotal(response.data.total)

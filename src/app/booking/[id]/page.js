@@ -54,7 +54,7 @@ export default function Page() {
   useEffect(() => {
     const getPackage = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/packages/${id}`);
+        const response = await axios.get(`https://test.roadrimz.com/packages/${id}`);
         setPackages(response.data);
       } catch (error) {
         console.log(error);
@@ -69,7 +69,7 @@ export default function Page() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post('http://127.0.0.1:8000/bookings/', {
+      const response = await axios.post('https://test.roadrimz.com/bookings/', {
         date, start_time, end_time
       });
       setAvailable(true);
@@ -90,7 +90,7 @@ export default function Page() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://127.0.0.1:8000/bookings/add', {
+      await axios.post('https://test.roadrimz.com/bookings/add', {
         date, start_time, end_time, full_name, email, phone, address, package_id,
         location, photographers:photo, videographers:video, total_amount, special_request
       });
@@ -109,7 +109,7 @@ export default function Page() {
   const makePayment = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://127.0.0.1:8000/payments/mpesa', {
+      await axios.post('https://test.roadrimz.com/payments/mpesa', {
         phone, amount, email
       })
       toast.success(`Stk push sent to ${phone}`)
