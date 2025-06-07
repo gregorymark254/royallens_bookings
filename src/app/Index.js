@@ -78,9 +78,10 @@ export default function Page() {
                       <div>
                         <p>KSH. {item.price?.toLocaleString()}</p>
                       </div>
-                      <div className='flex items-center justify-start'>
-                        <Link href={`/booking/${item.id}`} className="bg-[#F3C42E] hover:bg-[#f0c817ce] text-white rounded-lg px-5 py-2 transition-colors">Book Now</Link>
-                      </div>
+                      <Link href={`/booking/${item.id}`} className='flex items-center justify-start'>
+                        <span className="bg-[#F3C42E] hover:bg-[#f0c817ce] text-white rounded-lg px-5 py-2 transition-colors">Book Now</span>
+                      </Link>
+          
                     </div>
                   ))}
                  </div>
